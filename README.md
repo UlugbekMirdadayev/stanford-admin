@@ -128,10 +128,6 @@ npm run dev
 
 ---
 
-## 📄 Litsenziya
-
 UFLEX © 2025 - Barcha huquqlar himoyalangan.
-
-```
 
 ---
