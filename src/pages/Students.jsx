@@ -155,12 +155,14 @@ const Students = () => {
 
 const getStatusLabel = (status) => {
     switch (status) {
-      case "дома":
-        return "Дома";
-      case "в_пути_домой":
-        return "В пути домой";
-      case "в_пути_в_школу":
-        return "В пути в школу";
+      case "uyga_keldi":
+        return "🏡 Uyga yetib keldi";
+      case "uyga_ketmoqda":
+        return "🏠 Uyga tomon yo'lda";
+      case "maktabga_ketmoqda":
+        return "🏫 Maktab tomon yo'lda";
+      case "maktabga_keldi":
+        return "🏢 Maktabga yetib keldi";
       default:
         return status;
     }
@@ -296,9 +298,10 @@ const getStatusLabel = (status) => {
             <Select
               label="Текущий статус"
               options={[
-                { label: "Дома", value: "uyda" },
-                { label: "В пути домой", value: "yo'lda uy tomon" },
-                { label: "В пути в школу", value: "yo'lda maktab tomon" },
+                { label: "🏡 Uyga yetib keldi", value: "uyga_keldi" },
+                { label: "🏠 Uyga tomon yo'lda", value: "uyga_ketmoqda" },
+                { label: "🏫 Maktab tomon yo'lda", value: "maktabga_ketmoqda" },
+                { label: "🏢 Maktabga yetib keldi", value: "maktabga_keldi" },
               ]}
               value={watch("currentStatus")}
               onChange={(v) => setValue("currentStatus", v)}

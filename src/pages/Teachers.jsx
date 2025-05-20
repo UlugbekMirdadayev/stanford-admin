@@ -69,8 +69,10 @@ const Teachers = () => {
     });
     try {
       if (editing) {
-        // eslint-disable-next-line no-unused-vars
         const { telegramId, ...updateValues } = values;
+        if (telegramId && telegramId !== editing.telegramId) {
+          updateValues.telegramId = telegramId;
+        }
         await api.put(`/teachers/${editing._id}`, updateValues);
         toast.update(toastId, {
           render: "Информация об учителе обновлена!",
@@ -237,7 +239,9 @@ const Teachers = () => {
                 required: "Telegram ID обязателен",
               })}
               error={errors.telegramId?.message}
-              disabled={loading || editing}
+              disabled={
+                loading || (editing ? editing?.telegramId !== undefined : false)
+              }
             />
           </div>
 
