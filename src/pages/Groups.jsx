@@ -8,12 +8,11 @@ import { toast } from "react-toastify";
 import api from "../services/api";
 import "../styles/warehouse.css";
 
-const Students = () => {
+const Groups = () => {
   const [opened, setOpened] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [parents, setParents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
 
@@ -27,29 +26,13 @@ const Students = () => {
     setFocus,
   } = useForm({
     defaultValues: {
-      fullName: "",
-      classId: "",
-      parentId: "",
-      currentStatus: "uyda",
-      estimatedTime: "",
+      name: "",
+      teacherId: "",
     },
   });
 
-  const getStudents = async () => {
-    setTableLoading(true);
-    try {
-      const { data } = await api.get("/students");
-      setStudents(data);
-    } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Ошибка при загрузке учеников"
-      );
-    } finally {
-      setTableLoading(false);
-    }
-  };
-
   const getClasses = async () => {
+    setTableLoading(true);
     try {
       const { data } = await api.get("/classes");
       setClasses(data);
@@ -57,24 +40,25 @@ const Students = () => {
       toast.error(
         err?.response?.data?.message || "Ошибка при загрузке классов"
       );
+    } finally {
+      setTableLoading(false);
     }
   };
 
-  const getParents = async () => {
+  const getTeachers = async () => {
     try {
-      const { data } = await api.get("/parents");
-      setParents(data);
+      const { data } = await api.get("/teachers");
+      setTeachers(data);
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || "Ошибка при загрузке родителей"
+        err?.response?.data?.message || "Ошибка при загрузке учителей"
       );
     }
   };
 
   useEffect(() => {
-    getStudents();
     getClasses();
-    getParents();
+    getTeachers();
   }, []);
 
   const onSubmit = async (values) => {
@@ -85,17 +69,17 @@ const Students = () => {
 
     try {
       if (editing) {
-        await api.put(`/students/${editing._id}`, values);
+        await api.put(`/classes/${editing._id}`, values);
         toast.update(toastId, {
-          render: "Информация об ученике обновлена!",
+          render: "Информация о классе обновлена!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
         });
       } else {
-        await api.post("/students", values);
+        await api.post("/classes", values);
         toast.update(toastId, {
-          render: "Ученик успешно добавлен!",
+          render: "Класс успешно добавлен!",
           type: "success",
           isLoading: false,
           autoClose: 3000,
@@ -104,7 +88,7 @@ const Students = () => {
       reset();
       setEditing(null);
       setOpened(false);
-      getStudents();
+      getClasses();
     } catch (err) {
       const message =
         err?.response?.data?.message ||
@@ -123,12 +107,12 @@ const Students = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Вы действительно хотите удалить этого ученика?")) {
+    if (window.confirm("Вы действительно хотите удалить этот класс?")) {
       setLoading(true);
       try {
-        await api.delete(`/students/${id}`);
-        toast.success("Ученик удален");
-        getStudents();
+        await api.delete(`/classes/${id}`);
+        toast.success("Класс удален");
+        getClasses();
       } catch (err) {
         toast.error(err?.response?.data?.message || "Произошла ошибка");
       } finally {
@@ -137,11 +121,11 @@ const Students = () => {
     }
   };
 
-  const editStudent = (student) => {
-    setEditing(student);
+  const editClass = (classItem) => {
+    setEditing(classItem);
     setOpened(true);
-    Object.entries(student).forEach(([key, value]) => {
-      if ((key === "classId" || key === "parentId") && value) {
+    Object.entries(classItem).forEach(([key, value]) => {
+      if (key === "teacherId" && value) {
         setValue(key, value._id);
       } else {
         setValue(key, value);
@@ -150,50 +134,26 @@ const Students = () => {
   };
 
   useEffect(() => {
-    if (opened) setFocus("fullName");
+    if (opened) setFocus("name");
   }, [opened, setFocus]);
 
-const getStatusLabel = (status) => {
-    switch (status) {
-      case "дома":
-        return "Дома";
-      case "в_пути_домой":
-        return "В пути домой";
-      case "в_пути_в_школу":
-        return "В пути в школу";
-      default:
-        return status;
-    }
-  };
-
-
   const columns = [
-    { key: "fullName", title: "ФИО" },
+    { key: "name", title: "Название класса" },
     {
-      key: "classId",
-      title: "Класс",
-      render: (_, row) => row.classId?.name || "-",
+      key: "teacherId",
+      title: "Классный руководитель",
+      render: (_, row) => row.teacherId?.fullName || "-",
     },
     {
-      key: "parentId",
-      title: "Родитель",
-      render: (_, row) => row.parentId?.fullName || "-",
-    },
-    {
-      key: "currentStatus",
-      title: "Текущий статус",
-      render: (status) => getStatusLabel(status),
-    },
-    { 
-      key: "estimatedTime", 
-      title: "Расчетное время",
-      render: (time) => time || "-",
+      key: "createdAt",
+      title: "Дата создания",
+      render: (_, row) => new Date(row.createdAt).toLocaleDateString("ru-RU"),
     },
     {
       title: "Действия",
       render: (_, row) => (
         <div className="actions-row">
-          <button onClick={() => editStudent(row)} disabled={loading}>
+          <button onClick={() => editClass(row)} disabled={loading}>
             <Pen />
           </button>
           <button onClick={() => handleDelete(row._id)} disabled={loading}>
@@ -209,7 +169,7 @@ const getStatusLabel = (status) => {
       <div className="page-details">
         <div className="page-header">
           <Service />
-          <span>Ученики</span>
+          <span>Классы</span>
           <button
             onClick={() => {
               reset();
@@ -224,7 +184,7 @@ const getStatusLabel = (status) => {
         </div>
         <Table
           columns={columns}
-          data={students}
+          data={classes}
           sortable={true}
           pagination={true}
           pageSize={10}
@@ -244,7 +204,7 @@ const getStatusLabel = (status) => {
         <div className="form-body">
           <div className="page-header">
             <Upload />
-            <span>{editing ? "Редактировать ученика" : "Новый ученик"}</span>
+            <span>{editing ? "Редактировать класс" : "Новый класс"}</span>
             <button
               type="button"
               onClick={() => {
@@ -261,59 +221,21 @@ const getStatusLabel = (status) => {
 
           <div className="row-form">
             <Input
-              label="ФИО"
-              placeholder="Например, Иванов Иван Иванович"
-              {...register("fullName", { required: "ФИО обязательно" })}
-              error={errors.fullName?.message}
+              label="Название класса"
+              placeholder="Например, 5-A"
+              {...register("name", { required: "Название класса обязательно" })}
+              error={errors.name?.message}
               disabled={loading}
             />
             <Select
-              label="Класс"
-              options={classes.map((cls) => ({
-                label: cls.name,
-                value: cls._id,
+              label="Классный руководитель"
+              options={teachers.map((teacher) => ({
+                label: teacher.fullName,
+                value: teacher._id,
               }))}
-              value={watch("classId")}
-              onChange={(v) => setValue("classId", v)}
-              error={errors.classId?.message}
-              required
-              disabled={loading}
-            />
-          </div>
-
-          <div className="row-form">
-            <Select
-              label="Родитель"
-              options={parents.map((parent) => ({
-                label: parent.fullName,
-                value: parent._id,
-              }))}
-              value={watch("parentId")}
-              onChange={(v) => setValue("parentId", v)}
-              error={errors.parentId?.message}
-              disabled={loading}
-            />
-            <Select
-              label="Текущий статус"
-              options={[
-                { label: "Дома", value: "uyda" },
-                { label: "В пути домой", value: "yo'lda uy tomon" },
-                { label: "В пути в школу", value: "yo'lda maktab tomon" },
-              ]}
-              value={watch("currentStatus")}
-              onChange={(v) => setValue("currentStatus", v)}
-              error={errors.currentStatus?.message}
-              required
-              disabled={loading}
-            />
-          </div>
-
-          <div className="row-form">
-            <Input
-              label="Расчетное время"
-              placeholder="Например, 15 минут"
-              {...register("estimatedTime")}
-              error={errors.estimatedTime?.message}
+              value={watch("teacherId")}
+              onChange={(v) => setValue("teacherId", v)}
+              error={errors.teacherId?.message}
               disabled={loading}
             />
           </div>
@@ -341,4 +263,4 @@ const getStatusLabel = (status) => {
   );
 };
 
-export default Students;
+export default Groups;

@@ -1,0 +1,107 @@
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+  padding: 40px 30px 35px 30px;
+  border-bottom: 1px solid #e6e6e6;
+
+  .stats-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: calc(25% - 60px);
+
+    .icon-box {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      span {
+        color: #acacac;
+        font-size: 18px;
+        font-weight: 400;
+        letter-spacing: -0.14px;
+      }
+      p {
+        color: #333;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.32px;
+      }
+    }
+  }
+}
+.debtors-title {
+  color: #000;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.22px;
+  padding: 20px 30px;
+}
+.chart-container {
+  flex: 1;
+  margin-bottom: 40px;
+  padding: 20px;
+  min-width: 400px;
+
+  h3 {
+    color: #000;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.22px;
+  }
+  p {
+    color: #acacac;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.14px;
+  }
+}
+.charts {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  & > div {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .recharts-tooltip-item {
+    padding: 0px !important;
+  }
+  .tooltip-custome {
+    position: absolute;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='62' height='30' viewBox='0 0 62 30' fill='none'%3E%3Cpath d='M0 6C0 2.68629 2.68629 0 6 0H56C59.3137 0 62 2.68629 62 6V18C62 21.3137 59.3137 24 56 24H34L30.5 29.5L26.5 24H6C2.68629 24 0 21.3137 0 18V6Z' fill='black'/%3E%3C/svg%3E");
+    background-size: cover;
+    min-width: 120px;
+    transform: translateX(-50%);
+    min-height: 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 10px;
+    ul li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      svg {
+        height: 14px;
+        width: auto;
+      }
+      span {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.12px;
+      }
+    }
+  }
+}
