@@ -131,10 +131,9 @@ const StatusHistoriesStudents = () => {
         </div>
         <div className="filter-section" style={{ margin: "20px" }}>
           <Select
-            label="Фильтр по ученику"
-            options={[
+            label="Фильтр по ученику"            options={[
               { label: "Все ученики", value: "" },
-              ...students.map((student) => ({
+              ...(Array.isArray(students) ? students : []).map((student) => ({
                 label: student.fullName,
                 value: student._id,
               })),

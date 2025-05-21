@@ -112,7 +112,7 @@ const Parents = () => {
     try {
       const submitData = {
         ...values,
-        students: selectedStudents.map((studentId) => ({ studentId })),
+        students: selectedStudents?.map((studentId) => ({ studentId })),
       };
 
       if (editing) {
@@ -341,7 +341,7 @@ const Parents = () => {
           <div className="row-form">
             <Select
               label="Ученики"
-              options={students.map((student) => ({
+              options={students?.map((student) => ({
                 label: student.fullName,
                 value: student._id,
               }))}

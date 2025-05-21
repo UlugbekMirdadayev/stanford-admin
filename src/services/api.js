@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from "../store";
 import { setLogout } from "../store/slices/userSlice";
 
-axios.defaults.baseURL = "http://localhost:8080/api/";
+axios.defaults.baseURL = "https://stanford-parents-bot-backend-production.up.railway.app/api/";
 
 axios.interceptors.request.use(
   (config) => {
