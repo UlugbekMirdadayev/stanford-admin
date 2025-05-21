@@ -36,11 +36,15 @@ const links = [
     title: "Студенты",
     icon: (props) => <UserGroup {...props} />,
     href: "/students",
-  },
-  {
+  },  {
     title: "Родители",
     icon: (props) => <UserGroup {...props} />,
     href: "/parents",
+  },
+  {
+    title: "Жалобы",
+    icon: (props) => <WereHouse {...props} />,
+    href: "/complaints",
   },
   // {
   //   title: "Buyurtmalar",

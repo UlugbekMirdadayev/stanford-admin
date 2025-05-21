@@ -18,6 +18,7 @@ import moment from "moment/min/moment-with-locales";
 // import Payments from "./pages/Payments";
 // import OrdersPage from "./pages/Orders";
 import StatusHistoriesStudents from "./pages/StatusHistoriesStudents";
+import Complaints from "./pages/Complaints";
 
 moment.defineLocale("uz-latin", {
   months: [
@@ -138,10 +139,13 @@ const App = () => {
           <Route
             path="/students"
             element={<Students {...{ loading, setLoading }} />}
-          />
-          <Route
+          />          <Route
             path="/parents"
             element={<Parents {...{ loading, setLoading }} />}
+          />
+          <Route
+            path="/complaints"
+            element={<Complaints {...{ loading, setLoading }} />}
           />
           {/*  <Route
             path="/orders"
