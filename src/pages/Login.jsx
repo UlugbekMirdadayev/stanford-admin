@@ -100,7 +100,7 @@ const Login = () => {
     const API = new Promise((resolve, reject) => {
       setTimeout(() => {
         if (
-          dataForm.phone === "9987777777" &&
+          dataForm.phone === "998777777777" &&
           dataForm.password === "123456"
         ) {
           resolve({
