@@ -27,7 +27,6 @@ const Teachers = () => {
   } = useForm({
     defaultValues: {
       fullName: "",
-      telegramId: "",
       classId: "",
     },
   });
@@ -69,10 +68,7 @@ const Teachers = () => {
     });
     try {
       if (editing) {
-        const { telegramId, ...updateValues } = values;
-        if (telegramId && telegramId !== editing.telegramId) {
-          updateValues.telegramId = telegramId;
-        }
+        const { ...updateValues } = values;
         await api.put(`/teachers/${editing._id}`, updateValues);
         toast.update(toastId, {
           render: "Информация об учителе обновлена!",
@@ -143,7 +139,6 @@ const Teachers = () => {
 
   const columns = [
     { key: "fullName", title: "ФИО" },
-    { key: "telegramId", title: "Telegram ID" },
     {
       key: "classId",
       title: "Класс",
@@ -231,17 +226,6 @@ const Teachers = () => {
               {...register("fullName", { required: "ФИО обязательно" })}
               error={errors.fullName?.message}
               disabled={loading}
-            />{" "}
-            <Input
-              label="Telegram ID"
-              placeholder="Например, @teacher_id"
-              {...register("telegramId", {
-                required: "Telegram ID обязателен",
-              })}
-              error={errors.telegramId?.message}
-              disabled={
-                loading || (editing ? editing?.telegramId !== undefined : false)
-              }
             />
           </div>
 
