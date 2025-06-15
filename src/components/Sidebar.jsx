@@ -17,9 +17,14 @@ import {
 import "../styles/sidebar.css";
 
 const links = [
+  // {
+  //   title: "Главная",
+  //   icon: (props) => <Home {...props} />,
+  //   href: "/",
+  // },
   {
-    title: "Главная",
-    icon: (props) => <Home {...props} />,
+    title: "Студенты",
+    icon: (props) => <UserGroup {...props} />,
     href: "/",
   },
   {
@@ -32,11 +37,8 @@ const links = [
     icon: (props) => <WereHouse {...props} />,
     href: "/groups",
   },
+
   {
-    title: "Студенты",
-    icon: (props) => <UserGroup {...props} />,
-    href: "/students",
-  },  {
     title: "Родители",
     icon: (props) => <UserGroup {...props} />,
     href: "/parents",
@@ -90,9 +92,9 @@ const links = [
 
 const Sidebar = () => {
   const { user } = useSelector(({ user }) => user);
-  const dispatch = useDispatch();  const handleLogout = () => {
-    if (window.confirm("Вы действительно хотите выйти?"))
-      dispatch(setLogout());
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    if (window.confirm("Вы действительно хотите выйти?")) dispatch(setLogout());
   };
 
   return (
@@ -113,7 +115,8 @@ const Sidebar = () => {
               </NavLink>
             ))}
         </nav>
-      </div>      <button title="Выход" className="logout-btn" onClick={handleLogout}>
+      </div>{" "}
+      <button title="Выход" className="logout-btn" onClick={handleLogout}>
         <div className="word-name">{user?.fullName?.[0]}</div>
         <span>{user?.fullName}</span> <Logout />
       </button>

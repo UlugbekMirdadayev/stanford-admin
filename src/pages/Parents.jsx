@@ -227,7 +227,19 @@ const Parents = () => {
           className="primary btn"
           disabled={loading || students.length === 0}
           onClick={() =>
-            alert("Дети\n" + students?.map((s) => s?.studentId?.fullName + " | " + s?.studentId?.classId?.name+ " | " + s?.studentId?.classId?.teacherId?.fullName).join("\n"))
+            alert(
+              "Дети\n" +
+                students
+                  ?.map(
+                    (s) =>
+                      s?.fullName +
+                      " | " +
+                      s?.classId?.name +
+                      " | " +
+                      s?.classId?.teacherId?.fullName
+                  )
+                  .join("\n")
+            )
           }
         >
           {students.length} {students.length > 1 ? "детей" : "ребёнок"}

@@ -30,8 +30,6 @@ const Students = () => {
       fullName: "",
       classId: "",
       parentId: "",
-      currentStatus: "uyda",
-      estimatedTime: "",
     },
   });
 
@@ -153,22 +151,6 @@ const Students = () => {
     if (opened) setFocus("fullName");
   }, [opened, setFocus]);
 
-const getStatusLabel = (status) => {
-    switch (status) {
-      case "uyga_keldi":
-        return "🏡 Uyga yetib keldi";
-      case "uyga_ketmoqda":
-        return "🏠 Uyga tomon yo'lda";
-      case "maktabga_ketmoqda":
-        return "🏫 Maktab tomon yo'lda";
-      case "maktabga_keldi":
-        return "🏢 Maktabga yetib keldi";
-      default:
-        return status;
-    }
-  };
-
-
   const columns = [
     { key: "fullName", title: "ФИО" },
     {
@@ -180,16 +162,6 @@ const getStatusLabel = (status) => {
       key: "parentId",
       title: "Родитель",
       render: (_, row) => row.parentId?.fullName || "-",
-    },
-    {
-      key: "currentStatus",
-      title: "Текущий статус",
-      render: (status) => getStatusLabel(status),
-    },
-    { 
-      key: "estimatedTime", 
-      title: "Расчетное время",
-      render: (time) => time || "-",
     },
     {
       title: "Действия",
@@ -293,30 +265,6 @@ const getStatusLabel = (status) => {
               value={watch("parentId")}
               onChange={(v) => setValue("parentId", v)}
               error={errors.parentId?.message}
-              disabled={loading}
-            />
-            <Select
-              label="Текущий статус"
-              options={[
-                { label: "🏡 Uyga yetib keldi", value: "uyga_keldi" },
-                { label: "🏠 Uyga tomon yo'lda", value: "uyga_ketmoqda" },
-                { label: "🏫 Maktab tomon yo'lda", value: "maktabga_ketmoqda" },
-                { label: "🏢 Maktabga yetib keldi", value: "maktabga_keldi" },
-              ]}
-              value={watch("currentStatus")}
-              onChange={(v) => setValue("currentStatus", v)}
-              error={errors.currentStatus?.message}
-              required
-              disabled={loading}
-            />
-          </div>
-
-          <div className="row-form">
-            <Input
-              label="Расчетное время"
-              placeholder="Например, 15 минут"
-              {...register("estimatedTime")}
-              error={errors.estimatedTime?.message}
               disabled={loading}
             />
           </div>

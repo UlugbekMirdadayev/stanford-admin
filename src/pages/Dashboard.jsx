@@ -3,7 +3,6 @@ import { Controller, useForm } from "react-hook-form";
 import moment from "moment/min/moment-with-locales";
 import "moment/locale/uz";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 import {
   DashboardIcon,
   Dollar,
@@ -66,12 +65,11 @@ const statuses = [
 ];
 
 const Dashboard = () => {
-  const { user } = useSelector(({ user }) => user);
   const [chartData, setChartData] = useState({
     cashIn: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     cashOut: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     totalCashIn: 0,
-    totalCashOut: 0
+    totalCashOut: 0,
   });
   const [stats, setStats] = useState({});
   const [debtors, setDebtors] = useState([]);
@@ -105,33 +103,40 @@ const Dashboard = () => {
   const fetchAll = async () => {
     setTableLoading(true);
     try {
-      const [chartDataRes, statsRes, debtorsRes, branchesRes, clientsRes] = await Promise.all([
-        api.get("/transactions/statistics/monthly-transactions"),
-        api.get("/orders/stats/summary"),
-        api.get("/debtors"),
-        api.get("/branches"),
-        api.get("/clients"),
-      ]);
+      const [chartDataRes, statsRes, debtorsRes, branchesRes, clientsRes] =
+        await Promise.all([
+          api.get("/transactions/statistics/monthly-transactions"),
+          api.get("/orders/stats/summary"),
+          api.get("/debtors"),
+          api.get("/branches"),
+          api.get("/clients"),
+        ]);
       const cashIn = chartDataRes?.data?.cashIn;
       const cashOut = chartDataRes?.data?.cashOut;
 
       const totalCashIn = cashIn.reduce((sum, val) => sum + val, 0);
       const totalCashOut = cashOut.reduce((sum, val) => sum + val, 0);
 
-      const cashInPercent = cashIn.map(val =>
-        totalCashIn === 0 ? 0 : +(val / totalCashIn * 100).toFixed(2)
+      const cashInPercent = cashIn.map((val) =>
+        totalCashIn === 0 ? 0 : +((val / totalCashIn) * 100).toFixed(2)
       );
 
-      const cashOutPercent = cashOut.map(val =>
-        totalCashOut === 0 ? 0 : +(val / totalCashOut * 100).toFixed(2)
+      const cashOutPercent = cashOut.map((val) =>
+        totalCashOut === 0 ? 0 : +((val / totalCashOut) * 100).toFixed(2)
       );
 
-      setChartData({ cashIn: cashInPercent, cashOut: cashOutPercent, totalCashIn, totalCashOut });
+      setChartData({
+        cashIn: cashInPercent,
+        cashOut: cashOutPercent,
+        totalCashIn,
+        totalCashOut,
+      });
       setStats(statsRes.data);
       setDebtors(debtorsRes.data);
       setBranches(branchesRes.data);
-      setClients(clientsRes.data?.filter(c => c?.isVip));
+      setClients(clientsRes.data?.filter((c) => c?.isVip));
     } catch (err) {
+      console.error("Error fetching data:", err);
       toast.error("Ma'lumotlarni yuklashda xatolik");
     } finally {
       setTableLoading(false);
@@ -226,6 +231,7 @@ const Dashboard = () => {
       toast.success("Qarzdor o'chirildi");
       fetchAll();
     } catch (err) {
+      console.error("Error deleting debtor:", err);
       toast.error("O'chirishda xatolik");
     } finally {
       setLoading(false);
@@ -305,11 +311,7 @@ const Dashboard = () => {
         <div className="page-header">
           <DashboardIcon />
           <span>Statistika</span>
-          <button
-            onClick={openDrawerForAdd}
-            disabled={loading}
-            type="button"
-          >
+          <button onClick={openDrawerForAdd} disabled={loading} type="button">
             <X size={24} color="#3F8CFF" as="+" />
             <span>Qo‘shish</span>
           </button>
@@ -332,7 +334,10 @@ const Dashboard = () => {
         </div>
         <div className="charts">
           <KirimChart data={chartData?.cashIn} total={chartData?.totalCashIn} />
-          <ChiqimChart data={chartData?.cashOut} total={chartData?.totalCashOut} />
+          <ChiqimChart
+            data={chartData?.cashOut}
+            total={chartData?.totalCashOut}
+          />
         </div>
         <h2 className="debtors-title">Qarzdorlar ro‘yhati</h2>
         <Table
